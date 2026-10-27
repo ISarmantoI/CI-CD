@@ -49,6 +49,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
+        continue-on-error: true
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,6 +61,7 @@ jobs:
           prerelease: false
 
       - name: Upload artifact to Release
+        if: steps.create_release.outcome == 'success'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,3 +70,4 @@ jobs:
           asset_path: build/libs/todo-app-${{ steps.get_version.outputs.VERSION }}.jar
           asset_name: todo-app-${{ steps.get_version.outputs.VERSION }}.jar
           asset_content_type: application/java-archive
+
